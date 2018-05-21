@@ -1,7 +1,5 @@
 <html>
 <head>
-    <link rel="stylesheet" href="/css/logvisit.css" type="text/css">
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
 
     <script
             src="http://code.jquery.com/jquery-3.2.1.min.js"
@@ -14,7 +12,22 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>Veteran Services</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection"/>
 
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style type="text/css">
+
+        body {
+            background-color: #eceff1
+
+        }
+    </style>
     <script>
         function showToday() {
             var today = new Date();
@@ -46,94 +59,62 @@
 </head>
 
 <body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="black nav-wrapper">
+            <a href="home" class="brand-logo center blue-grey-text text-lighten-5">Veteran Services</a>
+            <ul class="right">
+                <li><a href="addclient" class="waves-effect waves-light btn grey"><i class="material-icons left">add</i>Add Client</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
 <div class="header">
     <button class="back-button btn-lg btn-danger" onclick="location.href='/home'" type="button">Back</button>
     <h1 class="client-header" style="margin-bottom: 40px">Log Visit</h1>
 </div>
-
 <div class="container">
-    <form method="post">
-        {{ csrf_field() }}
-        <div class="controls">
+    <div class="row">
+        <br>
+        <div class="col s12">
+            <div class="card white">
+                <form method="post">
+                    <div class="card-content">
+                        <span class="card-title">Log a Visit</span>
+                        <br>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <select name="client" required>
+                                    <option value="">-- Select --</option>
+                                    @foreach (\App\Client::clientList() as $client)
+                                        <option value={{ $client->id  }}>{{ $client->name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="client">Select Client</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <input id="date" type="text" name="date" class="datepicker" required>
+                                <label for="date">Date</label>
+                            </div>
+                            <div class="input-field col s3">
+                                <input id="time" type="text" name="time" class="timepicker" required>
+                                <label for="time">Time</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <textarea id="form_message" name="comments" class="materialize-textarea"></textarea>
+                                <label for="form_message">Notes</label>
+                            </div>
+                        </div>
 
-            @if ($saved)
-                <div class="validation">
-                    <h3>Visit logged successfully.</h3>
-                </div>
-            @endif
-
-            @if (count($errors) > 0)
-                <div class="validation">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </div>
-            @endif
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <select name="client" required>
-                            <option value="">-- Select --</option>
-                            @foreach (\App\Client::clientList() as $client)
-                                <option value={{ $client->id  }}>{{ $client->name }}</option>
-                            @endforeach
-                        </select>
-                        <div class="help-block with-errors"></div>
                     </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="date">Date</label>
-                        <input id="date" type="text" name="date" class="form-control" placeholder="Input date in yyyy-mm-dd format" required>
+                    <div class="card-action">
+                        <input type="submit" class="btn btn-success btn-send">Save</input>
                     </div>
-                </div>
-                <div class="form-group" style="margin:30px">
-                    <button id="today" onclick="showToday()" type="button">Right Now</button>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="time">Time</label>
-                        <input id="time" type="text" name="time" class="form-control" placeholder="Input time in hh:mm format" required>
-                    </div>
-                </div>
-                <div class="form-group" style="margin:30px">
-                    <select name="am_pm">
-                        <option id="AM" value="AM" selected>AM</option>
-                        <option id="PM" value="PM">PM</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <input id="type" type="text" name="type" class="form-control" placeholder="Describe type of visit">
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="form_message">Comments</label>
-                        <textarea id="form_message" name="comments" class="form-control" placeholder="Comments" rows="4"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <input type="submit" class="btn btn-success btn-send">
-                </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
 </body>
